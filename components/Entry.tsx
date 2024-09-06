@@ -60,7 +60,11 @@ export function Entry({
       className="mb-4 pl-6 border-b border-border pb-4"
     >
       <div className="flex items-center mb-2">
-        <div {...attributes} {...listeners} className="mr-2 cursor-move">
+        <div
+          {...attributes}
+          {...listeners}
+          className="pt-2.5 cursor-move self-start"
+        >
           <GripVertical className="text-muted-foreground h-4 w-4" />
         </div>
         <div className="flex-grow grid grid-cols-2 gap-2">
@@ -98,7 +102,7 @@ export function Entry({
           />
         </div>
       </div>
-      <ul className="list-disc pl-5 text-foreground space-y-1">
+      <ul className="list-disc pl-4 text-foreground space-y-1">
         {entry.details.map((detail, index) => (
           <li key={index} className="flex items-center">
             <Input
