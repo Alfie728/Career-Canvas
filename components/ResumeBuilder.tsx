@@ -3,7 +3,6 @@
 import React from "react";
 import {
   DndContext,
-  closestCenter,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -12,6 +11,9 @@ import {
   DragStartEvent, // Add this line
   DragOverlay,
   useDndMonitor,
+  CollisionDetection,
+  pointerWithin,
+  getFirstCollision,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -151,7 +153,30 @@ export function ResumeBuilder() {
     setActiveId(null);
     setActiveType(null);
   };
+  const customCollisionDetection: CollisionDetection = (args) => {
+    // First, let's get all intersecting droppable areas
+    const pointerIntersections = pointerWithin(args);
 
+    // If there's no intersection, return an empty array
+    if (!pointerIntersections.length) return [];
+
+    // Find the first droppable area that intersects with the pointer
+    const firstIntersection = getFirstCollision(pointerIntersections, "id");
+
+    if (firstIntersection) {
+      return [
+        {
+          id: firstIntersection,
+          data: {
+            droppableContainer: firstIntersection,
+            value: 0,
+          },
+        },
+      ];
+    }
+
+    return [];
+  };
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-8 bg-white">
       <div id="resume-content">
@@ -161,7 +186,7 @@ export function ResumeBuilder() {
         />
         <DndContext
           sensors={sensors}
-          collisionDetection={closestCenter}
+          collisionDetection={customCollisionDetection}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
