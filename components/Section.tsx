@@ -8,20 +8,10 @@ import { Section as SectionType } from "../constants/types";
 import {
   SortableContext,
   verticalListSortingStrategy,
-  arrayMove,
 } from "@dnd-kit/sortable";
 import { Input } from "@/components/ui/input";
-import {
-  DndContext,
-  DragEndEvent,
-  DragStartEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  CollisionDetection,
-  DragOverlay,
-} from "@dnd-kit/core";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
+import { useDragAndDrop } from "../hooks/useDragAndDrop";
 
 type SectionProps = {
   section: SectionType;
@@ -67,6 +57,17 @@ export function Section({
     isDragging: isSortableDragging,
   } = useSortable({ id: section.id, data: { type: "section" } });
 
+  const {
+    activeId,
+    activeType,
+    sensors,
+    handleDragStart,
+    handleDragEnd,
+    customCollisionDetection,
+  } = useDragAndDrop(section.entries, (newEntries) => {
+    updateEntry(section.id, "", "reorder", JSON.stringify(newEntries));
+  });
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -74,69 +75,6 @@ export function Section({
     zIndex: isDragging ? 1000 : 1,
   };
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor)
-  );
-
-  const [activeId, setActiveId] = React.useState<string | null>(null);
-  const [activeType, setActiveType] = React.useState<"entry" | null>(null);
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    setActiveId(active.id.toString());
-    setActiveType(active.data.current?.type || null);
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over) return;
-
-    if (active.id !== over.id) {
-      const oldIndex = section.entries.findIndex((e) => e.id === active.id);
-      const newIndex = section.entries.findIndex((e) => e.id === over.id);
-
-      if (oldIndex !== -1 && newIndex !== -1) {
-        const newEntries = arrayMove(section.entries, oldIndex, newIndex);
-        // Update the parent component's state
-        updateEntry(section.id, "", "reorder", JSON.stringify(newEntries));
-      }
-    }
-    setActiveId(null);
-    setActiveType(null);
-  };
-  const customCollisionDetection: CollisionDetection = (args) => {
-    const { droppableContainers, droppableRects, active } = args;
-
-    if (!active) return [];
-
-    const activeRect = active.rect.current.translated;
-    if (!activeRect) return [];
-
-    const dragHandleY = activeRect.top;
-
-    const collisions = [];
-
-    for (const droppableContainer of droppableContainers) {
-      const { id } = droppableContainer;
-      const rect = droppableRects.get(id);
-
-      if (rect && dragHandleY >= rect.top && dragHandleY <= rect.bottom) {
-        collisions.push({
-          id,
-          data: {
-            droppableContainer,
-            value: dragHandleY - rect.top,
-          },
-        });
-      }
-    }
-
-    collisions.sort((a, b) => a.data.value - b.data.value);
-
-    return collisions.length > 0 ? [collisions[0]] : [];
-  };
   return (
     <div
       ref={setNodeRef}
