@@ -9,6 +9,7 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
+  DragStartEvent,  // Add this line
   DragOverlay,
   useDndMonitor,
 } from "@dnd-kit/core";
@@ -24,8 +25,13 @@ import { PersonalInfo } from "./PersonalInfo";
 import { Section } from "./Section";
 import { useResumeState } from "../hooks/useResumeState";
 import { useExport } from "../hooks/useExport";
+import { Entry } from "./Entry";
 
-function DragMonitor({ setActiveId }: { setActiveId: (id: string | null) => void }) {
+function DragMonitor({
+  setActiveId,
+}: {
+  setActiveId: (id: string | null) => void;
+}) {
   useDndMonitor({
     onDragStart(event) {
       setActiveId(event.active.id.toString());
@@ -67,6 +73,15 @@ export function ResumeBuilder() {
   );
 
   const [activeId, setActiveId] = React.useState<string | null>(null);
+  const [activeType, setActiveType] = React.useState<
+    'section' | 'entry' | null
+  >(null);
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    setActiveId(active.id.toString());
+    setActiveType(active.data.current?.type || null);
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -77,43 +92,47 @@ export function ResumeBuilder() {
       const activeId = active.id.toString();
       const overId = over.id.toString();
 
-      const activeSectionIndex = sections.findIndex(section => 
-        section.entries.some(entry => entry.id === activeId)
-      );
-      const overSectionIndex = sections.findIndex(section => 
-        section.entries.some(entry => entry.id === overId)
-      );
+      // Check if we're dealing with sections or entries
+      const activeSectionIndex = sections.findIndex(section => section.id === activeId);
+      const overSectionIndex = sections.findIndex(section => section.id === overId);
 
       if (activeSectionIndex !== -1 && overSectionIndex !== -1) {
-        // Entry dragging within the same section or between sections
-        const newSections = [...sections];
-        const activeSection = newSections[activeSectionIndex];
-        const overSection = newSections[overSectionIndex];
-
-        const oldIndex = activeSection.entries.findIndex(entry => entry.id === activeId);
-        const newIndex = overSection.entries.findIndex(entry => entry.id === overId);
-
-        if (activeSectionIndex === overSectionIndex) {
-          // Dragging within the same section
-          activeSection.entries = arrayMove(activeSection.entries, oldIndex, newIndex);
-        } else {
-          // Dragging between sections
-          const [movedEntry] = activeSection.entries.splice(oldIndex, 1);
-          overSection.entries.splice(newIndex, 0, movedEntry);
-        }
-
+        // Section dragging
+        const newSections = arrayMove(sections, activeSectionIndex, overSectionIndex);
         setSections(newSections);
       } else {
-        // Section dragging
-        const oldIndex = sections.findIndex((s) => s.id === active.id);
-        const newIndex = sections.findIndex((s) => s.id === over.id);
+        // Entry dragging
+        const newSections = [...sections];
+        const activeSectionIndex = sections.findIndex(section => 
+          section.entries.some(entry => entry.id === activeId)
+        );
+        const overSectionIndex = sections.findIndex(section => 
+          section.entries.some(entry => entry.id === overId)
+        );
 
-        if (oldIndex !== -1 && newIndex !== -1) {
-          const newSections = arrayMove(sections, oldIndex, newIndex);
+        if (activeSectionIndex !== -1 && overSectionIndex !== -1) {
+          const activeSection = newSections[activeSectionIndex];
+          const overSection = newSections[overSectionIndex];
+
+          const oldIndex = activeSection.entries.findIndex(entry => entry.id === activeId);
+          const newIndex = overSection.entries.findIndex(entry => entry.id === overId);
+
+          if (activeSectionIndex === overSectionIndex) {
+            // Dragging within the same section
+            activeSection.entries = arrayMove(activeSection.entries, oldIndex, newIndex);
+          } else {
+            // Dragging between sections
+            const [movedEntry] = activeSection.entries.splice(oldIndex, 1);
+            overSection.entries.splice(newIndex, 0, movedEntry);
+          }
+
           setSections(newSections);
         }
       }
     }
+
+    setActiveId(null);
+    setActiveType(null);
   };
 
   return (
@@ -126,6 +145,7 @@ export function ResumeBuilder() {
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
           <DragMonitor setActiveId={setActiveId} />
@@ -146,7 +166,7 @@ export function ResumeBuilder() {
             ))}
           </SortableContext>
           <DragOverlay>
-            {activeId ? (
+            {activeId && activeType === 'section' && (
               <Section
                 section={sections.find((s) => s.id === activeId) || sections[0]}
                 addEntry={addEntry}
@@ -156,7 +176,18 @@ export function ResumeBuilder() {
                 removeEntry={removeEntry}
                 isDragging
               />
-            ) : null}
+            )}
+            {activeId && activeType === 'entry' && (
+              <Entry
+                entry={sections.flatMap(s => s.entries).find(e => e.id === activeId)!}
+                sectionId=""
+                updateEntry={() => {}}
+                addDetail={() => {}}
+                updateDetail={() => {}}
+                removeEntry={() => {}}
+                isDragging
+              />
+            )}
           </DragOverlay>
         </DndContext>
       </div>

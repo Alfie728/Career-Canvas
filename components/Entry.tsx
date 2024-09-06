@@ -23,6 +23,7 @@ type EntryProps = {
     value: string
   ) => void;
   removeEntry: (sectionId: string, entryId: string) => void;
+  isDragging?: boolean;
 };
 
 export function Entry({
@@ -32,6 +33,7 @@ export function Entry({
   addDetail,
   updateDetail,
   removeEntry,
+  isDragging = false,
 }: EntryProps) {
   const {
     attributes,
@@ -39,13 +41,13 @@ export function Entry({
     setNodeRef,
     transform,
     transition,
-    isDragging,
-  } = useSortable({ id: entry.id });
+    isDragging: isSortableDragging,
+  } = useSortable({ id: entry.id, data: { type: 'entry' } });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
+    opacity: isDragging || isSortableDragging ? 0.5 : 1,
     zIndex: isDragging ? 1000 : 1,
   };
 
@@ -53,11 +55,10 @@ export function Entry({
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
       className="mb-4 pl-6 border-b border-gray-100 pb-4"
     >
       <div className="flex items-center mb-2">
-        <div {...listeners} className="mr-2 cursor-move">
+        <div {...attributes} {...listeners} className="mr-2 cursor-move">
           <GripVertical className="text-gray-400 h-4 w-4" />
         </div>
         <div className="flex-grow">

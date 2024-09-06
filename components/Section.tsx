@@ -5,7 +5,10 @@ import { GripVertical, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Entry } from "./Entry";
 import { Section as SectionType } from "../constants/types";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 type SectionProps = {
   section: SectionType;
@@ -36,7 +39,14 @@ export function Section({
   removeEntry,
   isDragging = false,
 }: SectionProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging: isSortableDragging } = useSortable({ id: section.id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging: isSortableDragging,
+  } = useSortable({ id: section.id, data: { type: "section" } });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -49,11 +59,10 @@ export function Section({
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
       className="mb-6 border border-gray-200 p-4 rounded-lg bg-white"
     >
-      <div className="flex items-center mb-2">
-        <div {...listeners} className="mr-2 cursor-move">
+      <div className="flex items-center mb-2" {...attributes} {...listeners}>
+        <div className="mr-2 cursor-move">
           <GripVertical className="text-gray-400" />
         </div>
         <h2 className="text-xl font-bold">{section.title}</h2>
