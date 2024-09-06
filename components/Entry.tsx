@@ -1,8 +1,9 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, PlusCircle, X, Trash2 } from "lucide-react";
+import { GripVertical, PlusCircle, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Entry as EntryType } from "../constants/types";
 
@@ -101,23 +102,31 @@ export function Entry({
             placeholder="Date"
           />
         </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => removeEntry(sectionId, entry.id)}
+          className="text-muted-foreground self-start mt-0.5"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
       </div>
-      <ul className="list-disc pl-4 text-foreground space-y-1">
+      <ul className="list-disc pl-4 text-foreground space-y-1 pr-8">
         {entry.details.map((detail, index) => (
           <li key={index} className="flex items-center">
-            <Input
+            <Textarea
               value={detail}
               onChange={(e) =>
                 updateDetail(sectionId, entry.id, index, e.target.value)
               }
-              className="w-full border-none bg-transparent p-2"
+              className="flex-grow border-none bg-transparent p-2"
               placeholder="Detail"
             />
             <Button
               variant="ghost"
               size="sm"
               onClick={() => removeDetail(sectionId, entry.id, index)}
-              className="ml-2 text-muted-foreground"
+              className="text-muted-foreground ml-2"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -133,14 +142,6 @@ export function Entry({
         >
           <PlusCircle className="h-4 w-4 mr-2" />
           Add Detail
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => removeEntry(sectionId, entry.id)}
-          className="text-muted-foreground"
-        >
-          <X className="h-4 w-4" />
         </Button>
       </div>
     </div>
