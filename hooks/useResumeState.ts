@@ -179,17 +179,27 @@ export function useResumeState() {
     field: string,
     value: string
   ) => {
-    setSections(
-      sections.map((section) =>
-        section.id === sectionId
-          ? {
+    setSections((prevSections) =>
+      prevSections.map((section) => {
+        if (section.id === sectionId) {
+          if (field === "reorder") {
+            // Handle reordering of entries
+            return {
+              ...section,
+              entries: JSON.parse(value),
+            };
+          } else {
+            // Handle updating entry fields
+            return {
               ...section,
               entries: section.entries.map((entry) =>
                 entry.id === entryId ? { ...entry, [field]: value } : entry
               ),
-            }
-          : section
-      )
+            };
+          }
+        }
+        return section;
+      })
     );
   };
 

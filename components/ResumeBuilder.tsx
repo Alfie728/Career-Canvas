@@ -94,7 +94,7 @@ export function ResumeBuilder() {
       const activeId = active.id.toString();
       const overId = over.id.toString();
 
-      // Check if we're dealing with sections or entries
+      // Check if we're dealing with sections
       const activeSectionIndex = sections.findIndex(
         (section) => section.id === activeId
       );
@@ -110,43 +110,8 @@ export function ResumeBuilder() {
           overSectionIndex
         );
         setSections(newSections);
-      } else {
-        // Entry dragging
-        const newSections = [...sections];
-        const activeSectionIndex = sections.findIndex((section) =>
-          section.entries.some((entry) => entry.id === activeId)
-        );
-        const overSectionIndex = sections.findIndex((section) =>
-          section.entries.some((entry) => entry.id === overId)
-        );
-
-        if (activeSectionIndex !== -1 && overSectionIndex !== -1) {
-          const activeSection = newSections[activeSectionIndex];
-          const overSection = newSections[overSectionIndex];
-
-          const oldIndex = activeSection.entries.findIndex(
-            (entry) => entry.id === activeId
-          );
-          const newIndex = overSection.entries.findIndex(
-            (entry) => entry.id === overId
-          );
-
-          if (activeSectionIndex === overSectionIndex) {
-            // Dragging within the same section
-            activeSection.entries = arrayMove(
-              activeSection.entries,
-              oldIndex,
-              newIndex
-            );
-          } else {
-            // Dragging between sections
-            const [movedEntry] = activeSection.entries.splice(oldIndex, 1);
-            overSection.entries.splice(newIndex, 0, movedEntry);
-          }
-
-          setSections(newSections);
-        }
       }
+      // Entry dragging is now handled within each Section component
     }
 
     setActiveId(null);
