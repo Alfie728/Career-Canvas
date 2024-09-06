@@ -66,26 +66,28 @@ export function Section({
     <div
       ref={setNodeRef}
       style={style}
-      className="mb-6 border border-gray-200 p-4 rounded-lg bg-white relative"
+      className="mb-6 border border-border p-4 rounded-lg bg-card text-card-foreground"
     >
-      <div className="flex items-center mb-2" {...attributes} {...listeners}>
-        <div className="mr-2 cursor-move">
-          <GripVertical className="text-gray-400" />
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center flex-grow">
+          <div className="mr-2 cursor-move" {...attributes} {...listeners}>
+            <GripVertical className="text-muted-foreground" />
+          </div>
+          <Input
+            value={section.title}
+            onChange={(e) => updateSectionTitle(section.id, e.target.value)}
+            className="text-xl font-bold border-none bg-transparent p-2 w-full"
+          />
         </div>
-        <Input
-          value={section.title}
-          onChange={(e) => updateSectionTitle(section.id, e.target.value)}
-          className="text-xl font-bold border-none"
-        />
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => removeSection(section.id)}
+          className="text-muted-foreground ml-2"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
       </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => removeSection(section.id)}
-        className="absolute top-2 right-2"
-      >
-        <Trash2 className="h-4 w-4" />
-      </Button>
       <SortableContext
         items={section.entries.map((entry) => entry.id)}
         strategy={verticalListSortingStrategy}
@@ -107,7 +109,7 @@ export function Section({
         variant="outline"
         size="sm"
         onClick={() => addEntry(section.id)}
-        className="mt-2"
+        className="mt-4 w-full"
       >
         <PlusCircle className="h-4 w-4 mr-2" />
         Add {section.title} Entry

@@ -187,8 +187,8 @@ export function ResumeBuilder() {
     return collisions.length > 0 ? [collisions[0]] : [];
   };
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8 bg-white">
-      <div id="resume-content">
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      <div id="resume-content" className="space-y-6">
         <PersonalInfo
           personalInfo={personalInfo}
           updatePersonalInfo={updatePersonalInfo}
@@ -215,7 +215,7 @@ export function ResumeBuilder() {
                 removeEntry={removeEntry}
                 updateSectionTitle={updateSectionTitle}
                 removeSection={removeSection}
-                removeDetail={removeDetail} // Add this line
+                removeDetail={removeDetail}
               />
             ))}
           </SortableContext>
@@ -230,7 +230,7 @@ export function ResumeBuilder() {
                 removeEntry={removeEntry}
                 updateSectionTitle={updateSectionTitle}
                 removeSection={removeSection}
-                removeDetail={removeDetail} // Add this line
+                removeDetail={removeDetail}
                 isDragging
               />
             )}
@@ -247,7 +247,7 @@ export function ResumeBuilder() {
                 updateDetail={() => {}}
                 removeEntry={() => {}}
                 isDragging
-                removeDetail={removeDetail} // Add this line
+                removeDetail={removeDetail}
               />
             )}
           </DragOverlay>
@@ -256,7 +256,7 @@ export function ResumeBuilder() {
           variant="outline"
           size="sm"
           onClick={addSection}
-          className="mt-4"
+          className="w-full"
         >
           <PlusCircle className="h-4 w-4 mr-2" />
           Add New Section

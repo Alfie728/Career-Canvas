@@ -44,7 +44,7 @@ export function Entry({
     transform,
     transition,
     isDragging: isSortableDragging,
-  } = useSortable({ id: entry.id, data: { type: 'entry' } });
+  } = useSortable({ id: entry.id, data: { type: "entry" } });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -57,52 +57,48 @@ export function Entry({
     <div
       ref={setNodeRef}
       style={style}
-      className="mb-4 pl-6 border-b border-gray-100 pb-4"
+      className="mb-4 pl-6 border-b border-border pb-4"
     >
       <div className="flex items-center mb-2">
         <div {...attributes} {...listeners} className="mr-2 cursor-move">
-          <GripVertical className="text-gray-400 h-4 w-4" />
+          <GripVertical className="text-muted-foreground h-4 w-4" />
         </div>
-        <div className="flex-grow">
-          <div className="flex justify-between mb-1">
-            <Input
-              value={entry.title}
-              onChange={(e) =>
-                updateEntry(sectionId, entry.id, "title", e.target.value)
-              }
-              className="font-bold w-1/2 border-none"
-              placeholder="Title"
-            />
-            <Input
-              value={entry.location || ""}
-              onChange={(e) =>
-                updateEntry(sectionId, entry.id, "location", e.target.value)
-              }
-              className="text-right w-1/2 border-none"
-              placeholder="Location"
-            />
-          </div>
-          <div className="flex justify-between mb-1">
-            <Input
-              value={entry.subtitle || ""}
-              onChange={(e) =>
-                updateEntry(sectionId, entry.id, "subtitle", e.target.value)
-              }
-              className="italic w-1/2 border-none"
-              placeholder="Subtitle"
-            />
-            <Input
-              value={entry.date || ""}
-              onChange={(e) =>
-                updateEntry(sectionId, entry.id, "date", e.target.value)
-              }
-              className="text-right w-1/2 border-none"
-              placeholder="Date"
-            />
-          </div>
+        <div className="flex-grow grid grid-cols-2 gap-2">
+          <Input
+            value={entry.title}
+            onChange={(e) =>
+              updateEntry(sectionId, entry.id, "title", e.target.value)
+            }
+            className="font-bold border-none bg-transparent p-2"
+            placeholder="Title"
+          />
+          <Input
+            value={entry.location || ""}
+            onChange={(e) =>
+              updateEntry(sectionId, entry.id, "location", e.target.value)
+            }
+            className="text-right border-none bg-transparent p-2"
+            placeholder="Location"
+          />
+          <Input
+            value={entry.subtitle || ""}
+            onChange={(e) =>
+              updateEntry(sectionId, entry.id, "subtitle", e.target.value)
+            }
+            className="italic border-none bg-transparent p-2"
+            placeholder="Subtitle"
+          />
+          <Input
+            value={entry.date || ""}
+            onChange={(e) =>
+              updateEntry(sectionId, entry.id, "date", e.target.value)
+            }
+            className="text-right border-none bg-transparent p-2"
+            placeholder="Date"
+          />
         </div>
       </div>
-      <ul className="list-disc pl-5">
+      <ul className="list-disc pl-5 text-foreground space-y-1">
         {entry.details.map((detail, index) => (
           <li key={index} className="flex items-center">
             <Input
@@ -110,14 +106,14 @@ export function Entry({
               onChange={(e) =>
                 updateDetail(sectionId, entry.id, index, e.target.value)
               }
-              className="w-full border-none"
+              className="w-full border-none bg-transparent p-2"
               placeholder="Detail"
             />
             <Button
               variant="ghost"
               size="sm"
               onClick={() => removeDetail(sectionId, entry.id, index)}
-              className="ml-2"
+              className="ml-2 text-muted-foreground"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -137,6 +133,7 @@ export function Entry({
           variant="ghost"
           size="sm"
           onClick={() => removeEntry(sectionId, entry.id)}
+          className="text-muted-foreground"
         >
           <X className="h-4 w-4" />
         </Button>
