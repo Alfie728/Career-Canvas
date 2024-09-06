@@ -9,7 +9,7 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-  DragStartEvent,  // Add this line
+  DragStartEvent, // Add this line
   DragOverlay,
   useDndMonitor,
 } from "@dnd-kit/core";
@@ -60,7 +60,7 @@ export function ResumeBuilder() {
     removeEntry,
   } = useResumeState();
 
-  const { exportToPDF, exportToMarkdown, exportToWord } = useExport(
+  const { exportToMarkdown, exportToWord } = useExport(
     personalInfo,
     sections
   );
@@ -74,7 +74,7 @@ export function ResumeBuilder() {
 
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const [activeType, setActiveType] = React.useState<
-    'section' | 'entry' | null
+    "section" | "entry" | null
   >(null);
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -93,33 +93,49 @@ export function ResumeBuilder() {
       const overId = over.id.toString();
 
       // Check if we're dealing with sections or entries
-      const activeSectionIndex = sections.findIndex(section => section.id === activeId);
-      const overSectionIndex = sections.findIndex(section => section.id === overId);
+      const activeSectionIndex = sections.findIndex(
+        (section) => section.id === activeId
+      );
+      const overSectionIndex = sections.findIndex(
+        (section) => section.id === overId
+      );
 
       if (activeSectionIndex !== -1 && overSectionIndex !== -1) {
         // Section dragging
-        const newSections = arrayMove(sections, activeSectionIndex, overSectionIndex);
+        const newSections = arrayMove(
+          sections,
+          activeSectionIndex,
+          overSectionIndex
+        );
         setSections(newSections);
       } else {
         // Entry dragging
         const newSections = [...sections];
-        const activeSectionIndex = sections.findIndex(section => 
-          section.entries.some(entry => entry.id === activeId)
+        const activeSectionIndex = sections.findIndex((section) =>
+          section.entries.some((entry) => entry.id === activeId)
         );
-        const overSectionIndex = sections.findIndex(section => 
-          section.entries.some(entry => entry.id === overId)
+        const overSectionIndex = sections.findIndex((section) =>
+          section.entries.some((entry) => entry.id === overId)
         );
 
         if (activeSectionIndex !== -1 && overSectionIndex !== -1) {
           const activeSection = newSections[activeSectionIndex];
           const overSection = newSections[overSectionIndex];
 
-          const oldIndex = activeSection.entries.findIndex(entry => entry.id === activeId);
-          const newIndex = overSection.entries.findIndex(entry => entry.id === overId);
+          const oldIndex = activeSection.entries.findIndex(
+            (entry) => entry.id === activeId
+          );
+          const newIndex = overSection.entries.findIndex(
+            (entry) => entry.id === overId
+          );
 
           if (activeSectionIndex === overSectionIndex) {
             // Dragging within the same section
-            activeSection.entries = arrayMove(activeSection.entries, oldIndex, newIndex);
+            activeSection.entries = arrayMove(
+              activeSection.entries,
+              oldIndex,
+              newIndex
+            );
           } else {
             // Dragging between sections
             const [movedEntry] = activeSection.entries.splice(oldIndex, 1);
@@ -166,7 +182,7 @@ export function ResumeBuilder() {
             ))}
           </SortableContext>
           <DragOverlay>
-            {activeId && activeType === 'section' && (
+            {activeId && activeType === "section" && (
               <Section
                 section={sections.find((s) => s.id === activeId) || sections[0]}
                 addEntry={addEntry}
@@ -177,9 +193,13 @@ export function ResumeBuilder() {
                 isDragging
               />
             )}
-            {activeId && activeType === 'entry' && (
+            {activeId && activeType === "entry" && (
               <Entry
-                entry={sections.flatMap(s => s.entries).find(e => e.id === activeId)!}
+                entry={
+                  sections
+                    .flatMap((s) => s.entries)
+                    .find((e) => e.id === activeId)!
+                }
                 sectionId=""
                 updateEntry={() => {}}
                 addDetail={() => {}}
@@ -192,10 +212,6 @@ export function ResumeBuilder() {
         </DndContext>
       </div>
       <div className="flex justify-center space-x-4">
-        <Button onClick={exportToPDF}>
-          <FileDown className="mr-2 h-4 w-4" />
-          Export to PDF
-        </Button>
         <Button onClick={exportToMarkdown}>
           <FileDown className="mr-2 h-4 w-4" />
           Export to Markdown
