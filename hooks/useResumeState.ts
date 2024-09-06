@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { DropResult } from "react-beautiful-dnd";
+import { DragEndEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import { Section } from "../constants/types";
 
 export function useResumeState() {
@@ -32,7 +33,7 @@ export function useResumeState() {
           id: "exp1",
           title: "Amazon.com",
           subtitle: "Software Development Engineering Intern",
-          location: "New York, New York",
+          location: "New York",
           date: "May 2020 – Aug 2020",
           details: [
             "Created Python scripts to construct a pipeline that retrieved performance data from the AWS cross-regional team",
@@ -42,40 +43,110 @@ export function useResumeState() {
         },
       ],
     },
-    { id: "projects", title: "PROJECTS", entries: [] },
-    { id: "activities", title: "ACTIVITIES AND LEADERSHIP", entries: [] },
-    { id: "skills", title: "SKILLS", entries: [] },
+    {
+      id: "projects",
+      title: "PROJECTS",
+      entries: [
+        {
+          id: "proj1",
+          title: "Personal Portfolio Website",
+          subtitle: "Full-Stack Web Development",
+          date: "Jan 2023 - Present",
+          details: [
+            "Designed and developed a responsive personal portfolio website using React and Next.js",
+            "Implemented a custom CMS for easy content management using Sanity.io",
+            "Utilized Tailwind CSS for efficient and responsive styling",
+          ],
+        },
+        {
+          id: "proj2",
+          title: "Machine Learning Image Classifier",
+          subtitle: "Python, TensorFlow",
+          date: "Sep 2022 - Dec 2022",
+          details: [
+            "Built an image classification model using TensorFlow and Keras",
+            "Trained the model on a dataset of 10,000 images across 10 categories",
+            "Achieved 92% accuracy on the test set",
+          ],
+        },
+      ],
+    },
+    {
+      id: "activities",
+      title: "ACTIVITIES AND LEADERSHIP",
+      entries: [
+        {
+          id: "act1",
+          title: "Computer Science Student Association",
+          subtitle: "Vice President",
+          location: "University of New South Wales",
+          date: "Sep 2022 - Present",
+          details: [
+            "Organize weekly coding workshops and tech talks for over 200 members",
+            "Manage a team of 5 committee members to plan and execute events",
+            "Increased member engagement by 30% through new initiatives and social media outreach",
+          ],
+        },
+        {
+          id: "act2",
+          title: "Hackathon Participant",
+          subtitle: "Team Leader",
+          location: "Various Events",
+          date: "2021 - Present",
+          details: [
+            "Participated in 5 hackathons, leading teams of 3-4 members",
+            "Won 'Best Use of AI' award at University Tech Challenge 2022",
+            "Developed prototype solutions for real-world problems in 24-48 hour timeframes",
+          ],
+        },
+      ],
+    },
+    {
+      id: "skills",
+      title: "SKILLS",
+      entries: [
+        {
+          id: "skill1",
+          title: "Programming Languages",
+          details: ["Python, JavaScript, TypeScript, Java, C++, SQL"],
+        },
+        {
+          id: "skill2",
+          title: "Web Technologies",
+          details: [
+            "React, Next.js, Node.js, Express, HTML5, CSS3, Tailwind CSS",
+          ],
+        },
+        {
+          id: "skill3",
+          title: "Tools & Platforms",
+          details: ["Git, Docker, AWS, Firebase, MongoDB, PostgreSQL"],
+        },
+        {
+          id: "skill4",
+          title: "Soft Skills",
+          details: [
+            "Team Leadership, Project Management, Public Speaking, Problem Solving",
+          ],
+        },
+      ],
+    },
   ]);
 
   const updatePersonalInfo = (field: string, value: string) => {
     setPersonalInfo((prev) => ({ ...prev, [field]: value }));
   };
 
-  const onDragEnd = (result: DropResult) => {
-    const { source, destination, type } = result;
+  const onDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
 
-    if (!destination) return;
+    if (active.id !== over?.id) {
+      setSections((sections) => {
+        const oldIndex = sections.findIndex((s) => s.id === active.id);
+        const newIndex = sections.findIndex((s) => s.id === over?.id);
 
-    if (type === "section") {
-      const newSections = Array.from(sections);
-      const [reorderedSection] = newSections.splice(source.index, 1);
-      newSections.splice(destination.index, 0, reorderedSection);
-      setSections(newSections);
-    } else if (type === "entry") {
-      const sectionIndex = sections.findIndex(
-        (section) => section.id === source.droppableId
-      );
-      const newSections = [...sections];
-      const [reorderedEntry] = newSections[sectionIndex].entries.splice(
-        source.index,
-        1
-      );
-      newSections[sectionIndex].entries.splice(
-        destination.index,
-        0,
-        reorderedEntry
-      );
-      setSections(newSections);
+        return arrayMove(sections, oldIndex, newIndex);
+      });
     }
   };
 
@@ -108,17 +179,27 @@ export function useResumeState() {
     field: string,
     value: string
   ) => {
-    setSections(
-      sections.map((section) =>
-        section.id === sectionId
-          ? {
+    setSections((prevSections) =>
+      prevSections.map((section) => {
+        if (section.id === sectionId) {
+          if (field === "reorder") {
+            // Handle reordering of entries
+            return {
+              ...section,
+              entries: JSON.parse(value),
+            };
+          } else {
+            // Handle updating entry fields
+            return {
               ...section,
               entries: section.entries.map((entry) =>
                 entry.id === entryId ? { ...entry, [field]: value } : entry
               ),
-            }
-          : section
-      )
+            };
+          }
+        }
+        return section;
+      })
     );
   };
 
@@ -179,9 +260,50 @@ export function useResumeState() {
     );
   };
 
+  const addSection = () => {
+    const newSection: Section = {
+      id: `section-${Date.now()}`,
+      title: "New Section",
+      entries: [],
+    };
+    setSections([...sections, newSection]);
+  };
+
+  const removeSection = (sectionId: string) => {
+    setSections(sections.filter((section) => section.id !== sectionId));
+  };
+
+  const updateSectionTitle = (sectionId: string, title: string) => {
+    setSections(
+      sections.map((section) =>
+        section.id === sectionId ? { ...section, title } : section
+      )
+    );
+  };
+  const removeDetail = (sectionId: string, entryId: string, index: number) => {
+    setSections((prevSections) =>
+      prevSections.map((section) =>
+        section.id === sectionId
+          ? {
+              ...section,
+              entries: section.entries.map((entry) =>
+                entry.id === entryId
+                  ? {
+                      ...entry,
+                      details: entry.details.filter((_, i) => i !== index),
+                    }
+                  : entry
+              ),
+            }
+          : section
+      )
+    );
+  };
+
   return {
     personalInfo,
     sections,
+    setSections, // Add this line
     updatePersonalInfo,
     onDragEnd,
     addEntry,
@@ -189,5 +311,9 @@ export function useResumeState() {
     addDetail,
     updateDetail,
     removeEntry,
+    addSection,
+    removeSection,
+    updateSectionTitle,
+    removeDetail,
   };
 }
