@@ -20,16 +20,16 @@
     "lucide-react": "^0.438.0",
     "next": "14.2.8",
     "react": "^18",
-    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "@dnd-kit/core": "^6.0.8",
+    "@dnd-kit/sortable": "^7.0.2"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
     "@types/react": "^18",
-    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.8",

@@ -1,5 +1,5 @@
 import React from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Section } from "./Section";
 import { Section as SectionType } from "../constants/types";
 
@@ -31,24 +31,22 @@ export function SectionList({
   removeEntry,
 }: SectionListProps) {
   return (
-    <Droppable droppableId="sections" type="section">
-      {(provided) => (
-        <div {...provided.droppableProps} ref={provided.innerRef}>
-          {sections.map((section, index) => (
-            <Section
-              key={section.id}
-              section={section}
-              index={index}
-              addEntry={addEntry}
-              updateEntry={updateEntry}
-              addDetail={addDetail}
-              updateDetail={updateDetail}
-              removeEntry={removeEntry}
-            />
-          ))}
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
+    <SortableContext
+      items={sections.map(section => section.id)}
+      strategy={verticalListSortingStrategy}
+    >
+      {sections.map((section, index) => (
+        <Section
+          key={section.id}
+          section={section}
+          index={index}
+          addEntry={addEntry}
+          updateEntry={updateEntry}
+          addDetail={addDetail}
+          updateDetail={updateDetail}
+          removeEntry={removeEntry}
+        />
+      ))}
+    </SortableContext>
   );
 }

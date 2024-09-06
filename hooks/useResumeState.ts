@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { DropResult } from "react-beautiful-dnd";
+import { DragEndEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import { Section } from "../constants/types";
 
 export function useResumeState() {
@@ -51,31 +52,16 @@ export function useResumeState() {
     setPersonalInfo((prev) => ({ ...prev, [field]: value }));
   };
 
-  const onDragEnd = (result: DropResult) => {
-    const { source, destination, type } = result;
+  const onDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
 
-    if (!destination) return;
+    if (active.id !== over?.id) {
+      setSections((sections) => {
+        const oldIndex = sections.findIndex((s) => s.id === active.id);
+        const newIndex = sections.findIndex((s) => s.id === over?.id);
 
-    if (type === "section") {
-      const newSections = Array.from(sections);
-      const [reorderedSection] = newSections.splice(source.index, 1);
-      newSections.splice(destination.index, 0, reorderedSection);
-      setSections(newSections);
-    } else if (type === "entry") {
-      const sectionIndex = sections.findIndex(
-        (section) => section.id === source.droppableId
-      );
-      const newSections = [...sections];
-      const [reorderedEntry] = newSections[sectionIndex].entries.splice(
-        source.index,
-        1
-      );
-      newSections[sectionIndex].entries.splice(
-        destination.index,
-        0,
-        reorderedEntry
-      );
-      setSections(newSections);
+        return arrayMove(sections, oldIndex, newIndex);
+      });
     }
   };
 
@@ -182,6 +168,7 @@ export function useResumeState() {
   return {
     personalInfo,
     sections,
+    setSections, // Add this line
     updatePersonalInfo,
     onDragEnd,
     addEntry,
