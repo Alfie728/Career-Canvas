@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import Link from "next/link";
+import { Anton } from "next/font/google";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -14,10 +16,15 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
+const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-anton",
+});
 
 export const metadata: Metadata = {
-  title: "Resume Builder",
-  description: "Build and customize your resume",
+  title: "Career Canvas",
+  description: "Create your career roadmap",
 };
 
 export default function RootLayout({
@@ -32,12 +39,17 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="min-h-screen flex flex-col">
-            <header className="p-4 flex justify-end">
+            <header className="p-4 flex justify-between items-center">
+              <Link href="/" className="flex items-center">
+                <span
+                  className={`${anton.className} font-bold text-2xl  tracking-wide`}
+                >
+                  Career Canvas
+                </span>
+              </Link>
               <ThemeToggle />
             </header>
-            <main className="flex-grow">
-              {children}
-            </main>
+            <main className="flex-grow">{children}</main>
           </div>
         </ThemeProvider>
       </body>
