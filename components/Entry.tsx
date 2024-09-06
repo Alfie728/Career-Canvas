@@ -129,6 +129,7 @@ export function Entry({
           variant="outline"
           size="sm"
           onClick={() => addDetail(sectionId, entry.id)}
+          className="ml-5"
         >
           <PlusCircle className="h-4 w-4 mr-2" />
           Add Detail
