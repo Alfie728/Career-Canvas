@@ -61,21 +61,27 @@ export function useExport(
               },
             ],
             spacing: { before: 100 }, // Add some space before each entry
-          }),
-          new Paragraph({
-            children: [
-              new TextRun({ text: entry.subtitle || "" }),
-              new TextRun({ text: "\t" }), // Tab
-              new TextRun({ text: entry.date || "", italics: true }),
-            ],
-            tabStops: [
-              {
-                type: TabStopType.RIGHT,
-                position: 9000,
-              },
-            ],
           })
         );
+
+        // Only add subtitle and date paragraph if either is not empty
+        if (entry.subtitle || entry.date) {
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({ text: entry.subtitle || "" }),
+                new TextRun({ text: "\t" }), // Tab
+                new TextRun({ text: entry.date || "", italics: true }),
+              ],
+              tabStops: [
+                {
+                  type: TabStopType.RIGHT,
+                  position: 9000,
+                },
+              ],
+            })
+          );
+        }
 
         entry.details.forEach((detail) => {
           children.push(
@@ -101,7 +107,9 @@ export function useExport(
       markdown += `## ${section.title}\n\n`;
       section.entries.forEach((entry) => {
         markdown += `### ${entry.title}\n`;
-        markdown += `${entry.subtitle} | ${entry.location} | ${entry.date}\n\n`;
+        if (entry.subtitle || entry.location || entry.date) {
+          markdown += `${entry.subtitle} | ${entry.location} | ${entry.date}\n\n`;
+        }
         entry.details.forEach((detail) => {
           markdown += `- ${detail}\n`;
         });

@@ -83,7 +83,7 @@ export function Entry({
               updateEntry(sectionId, entry.id, "location", e.target.value)
             }
             className="text-right border-none bg-transparent p-2"
-            placeholder="Location"
+            placeholder="Additional Details (Organizations, places, etc.)"
           />
           <Input
             value={entry.subtitle || ""}
@@ -99,7 +99,7 @@ export function Entry({
               updateEntry(sectionId, entry.id, "date", e.target.value)
             }
             className="text-right border-none bg-transparent p-2"
-            placeholder="Date"
+            placeholder="Additional Details (Dates, time periods, etc.)"
           />
         </div>
         <Button
