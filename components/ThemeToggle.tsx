@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/button";
 import { Moon, Sun, Monitor } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 

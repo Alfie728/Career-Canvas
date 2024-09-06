@@ -2,9 +2,9 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, PlusCircle, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/ui/button";
+import { Textarea } from "@/ui/textarea";
+import { Input } from "@/ui/input";
 import { Entry as EntryType } from "../constants/types";
 
 type EntryProps = {
