@@ -82,7 +82,7 @@ export function Entry({
             onChange={(e) =>
               updateEntry(sectionId, entry.id, "location", e.target.value)
             }
-            className="text-right border-none bg-transparent p-2"
+            className="italic text-right border-none bg-transparent p-2"
             placeholder="Additional Details (Organizations, places, etc.)"
           />
           <Input
@@ -90,7 +90,7 @@ export function Entry({
             onChange={(e) =>
               updateEntry(sectionId, entry.id, "subtitle", e.target.value)
             }
-            className="italic border-none bg-transparent p-2"
+            className="border-none bg-transparent p-2"
             placeholder="Subtitle"
           />
           <Input
@@ -98,7 +98,7 @@ export function Entry({
             onChange={(e) =>
               updateEntry(sectionId, entry.id, "date", e.target.value)
             }
-            className="text-right border-none bg-transparent p-2"
+            className="italic text-right border-none bg-transparent p-2"
             placeholder="Additional Details (Dates, time periods, etc.)"
           />
         </div>
