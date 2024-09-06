@@ -12,8 +12,6 @@ import {
   DragOverlay,
   useDndMonitor,
   CollisionDetection,
-  pointerWithin,
-  getFirstCollision,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -154,28 +152,38 @@ export function ResumeBuilder() {
     setActiveType(null);
   };
   const customCollisionDetection: CollisionDetection = (args) => {
-    // First, let's get all intersecting droppable areas
-    const pointerIntersections = pointerWithin(args);
+    const { droppableContainers, droppableRects, active } = args;
 
-    // If there's no intersection, return an empty array
-    if (!pointerIntersections.length) return [];
+    if (!active) return [];
 
-    // Find the first droppable area that intersects with the pointer
-    const firstIntersection = getFirstCollision(pointerIntersections, "id");
+    const activeRect = active.rect.current.translated;
+    if (!activeRect) return [];
 
-    if (firstIntersection) {
-      return [
-        {
-          id: firstIntersection,
+    // Use the y-position of the drag handle instead of the center
+    const dragHandleY = activeRect.top;
+
+    const collisions = [];
+
+    for (const droppableContainer of droppableContainers) {
+      const { id } = droppableContainer;
+      const rect = droppableRects.get(id);
+
+      if (rect && dragHandleY >= rect.top && dragHandleY <= rect.bottom) {
+        collisions.push({
+          id,
           data: {
-            droppableContainer: firstIntersection,
-            value: 0,
+            droppableContainer,
+            value: dragHandleY - rect.top, // Distance from top of container
           },
-        },
-      ];
+        });
+      }
     }
 
-    return [];
+    // Sort collisions by their vertical position
+    collisions.sort((a, b) => a.data.value - b.data.value);
+
+    // Return only the first (topmost) collision
+    return collisions.length > 0 ? [collisions[0]] : [];
   };
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-8 bg-white">

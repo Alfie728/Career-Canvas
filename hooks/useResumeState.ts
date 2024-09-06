@@ -43,9 +43,90 @@ export function useResumeState() {
         },
       ],
     },
-    { id: "projects", title: "PROJECTS", entries: [] },
-    { id: "activities", title: "ACTIVITIES AND LEADERSHIP", entries: [] },
-    { id: "skills", title: "SKILLS", entries: [] },
+    {
+      id: "projects",
+      title: "PROJECTS",
+      entries: [
+        {
+          id: "proj1",
+          title: "Personal Portfolio Website",
+          subtitle: "Full-Stack Web Development",
+          date: "Jan 2023 - Present",
+          details: [
+            "Designed and developed a responsive personal portfolio website using React and Next.js",
+            "Implemented a custom CMS for easy content management using Sanity.io",
+            "Utilized Tailwind CSS for efficient and responsive styling",
+          ],
+        },
+        {
+          id: "proj2",
+          title: "Machine Learning Image Classifier",
+          subtitle: "Python, TensorFlow",
+          date: "Sep 2022 - Dec 2022",
+          details: [
+            "Built an image classification model using TensorFlow and Keras",
+            "Trained the model on a dataset of 10,000 images across 10 categories",
+            "Achieved 92% accuracy on the test set",
+          ],
+        },
+      ],
+    },
+    {
+      id: "activities",
+      title: "ACTIVITIES AND LEADERSHIP",
+      entries: [
+        {
+          id: "act1",
+          title: "Computer Science Student Association",
+          subtitle: "Vice President",
+          location: "University of New South Wales",
+          date: "Sep 2022 - Present",
+          details: [
+            "Organize weekly coding workshops and tech talks for over 200 members",
+            "Manage a team of 5 committee members to plan and execute events",
+            "Increased member engagement by 30% through new initiatives and social media outreach",
+          ],
+        },
+        {
+          id: "act2",
+          title: "Hackathon Participant",
+          subtitle: "Team Leader",
+          location: "Various Events",
+          date: "2021 - Present",
+          details: [
+            "Participated in 5 hackathons, leading teams of 3-4 members",
+            "Won 'Best Use of AI' award at University Tech Challenge 2022",
+            "Developed prototype solutions for real-world problems in 24-48 hour timeframes",
+          ],
+        },
+      ],
+    },
+    {
+      id: "skills",
+      title: "SKILLS",
+      entries: [
+        {
+          id: "skill1",
+          title: "Programming Languages",
+          details: ["Python", "JavaScript", "TypeScript", "Java", "C++", "SQL"],
+        },
+        {
+          id: "skill2",
+          title: "Web Technologies",
+          details: ["React", "Next.js", "Node.js", "Express", "HTML5", "CSS3", "Tailwind CSS"],
+        },
+        {
+          id: "skill3",
+          title: "Tools & Platforms",
+          details: ["Git", "Docker", "AWS", "Firebase", "MongoDB", "PostgreSQL"],
+        },
+        {
+          id: "skill4",
+          title: "Soft Skills",
+          details: ["Team Leadership", "Project Management", "Public Speaking", "Problem Solving"],
+        },
+      ],
+    },
   ]);
 
   const updatePersonalInfo = (field: string, value: string) => {
