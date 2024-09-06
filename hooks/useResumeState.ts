@@ -113,17 +113,37 @@ export function useResumeState() {
         {
           id: "skill2",
           title: "Web Technologies",
-          details: ["React", "Next.js", "Node.js", "Express", "HTML5", "CSS3", "Tailwind CSS"],
+          details: [
+            "React",
+            "Next.js",
+            "Node.js",
+            "Express",
+            "HTML5",
+            "CSS3",
+            "Tailwind CSS",
+          ],
         },
         {
           id: "skill3",
           title: "Tools & Platforms",
-          details: ["Git", "Docker", "AWS", "Firebase", "MongoDB", "PostgreSQL"],
+          details: [
+            "Git",
+            "Docker",
+            "AWS",
+            "Firebase",
+            "MongoDB",
+            "PostgreSQL",
+          ],
         },
         {
           id: "skill4",
           title: "Soft Skills",
-          details: ["Team Leadership", "Project Management", "Public Speaking", "Problem Solving"],
+          details: [
+            "Team Leadership",
+            "Project Management",
+            "Public Speaking",
+            "Problem Solving",
+          ],
         },
       ],
     },
@@ -266,6 +286,25 @@ export function useResumeState() {
       )
     );
   };
+  const removeDetail = (sectionId: string, entryId: string, index: number) => {
+    setSections((prevSections) =>
+      prevSections.map((section) =>
+        section.id === sectionId
+          ? {
+              ...section,
+              entries: section.entries.map((entry) =>
+                entry.id === entryId
+                  ? {
+                      ...entry,
+                      details: entry.details.filter((_, i) => i !== index),
+                    }
+                  : entry
+              ),
+            }
+          : section
+      )
+    );
+  };
 
   return {
     personalInfo,
@@ -281,5 +320,6 @@ export function useResumeState() {
     addSection,
     removeSection,
     updateSectionTitle,
+    removeDetail,
   };
 }

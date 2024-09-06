@@ -31,6 +31,7 @@ type SectionProps = {
   updateSectionTitle: (sectionId: string, title: string) => void;
   removeSection: (sectionId: string) => void;
   isDragging?: boolean;
+  removeDetail: (sectionId: string, entryId: string, index: number) => void;
 };
 
 export function Section({
@@ -43,6 +44,7 @@ export function Section({
   updateSectionTitle,
   removeSection,
   isDragging = false,
+  removeDetail,
 }: SectionProps) {
   const {
     attributes,
@@ -97,6 +99,7 @@ export function Section({
             addDetail={addDetail}
             updateDetail={updateDetail}
             removeEntry={removeEntry}
+            removeDetail={removeDetail}
           />
         ))}
       </SortableContext>

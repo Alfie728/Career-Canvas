@@ -62,6 +62,7 @@ export function ResumeBuilder() {
     addSection,
     removeSection,
     updateSectionTitle,
+    removeDetail, // Add this line
   } = useResumeState();
 
   const { exportToMarkdown, exportToWord } = useExport(personalInfo, sections);
@@ -214,6 +215,7 @@ export function ResumeBuilder() {
                 removeEntry={removeEntry}
                 updateSectionTitle={updateSectionTitle}
                 removeSection={removeSection}
+                removeDetail={removeDetail} // Add this line
               />
             ))}
           </SortableContext>
@@ -228,6 +230,7 @@ export function ResumeBuilder() {
                 removeEntry={removeEntry}
                 updateSectionTitle={updateSectionTitle}
                 removeSection={removeSection}
+                removeDetail={removeDetail} // Add this line
                 isDragging
               />
             )}
@@ -244,6 +247,7 @@ export function ResumeBuilder() {
                 updateDetail={() => {}}
                 removeEntry={() => {}}
                 isDragging
+                removeDetail={removeDetail} // Add this line
               />
             )}
           </DragOverlay>

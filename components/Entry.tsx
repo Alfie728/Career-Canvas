@@ -1,7 +1,7 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, PlusCircle, X } from "lucide-react";
+import { GripVertical, PlusCircle, X, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Entry as EntryType } from "../constants/types";
@@ -23,6 +23,7 @@ type EntryProps = {
     value: string
   ) => void;
   removeEntry: (sectionId: string, entryId: string) => void;
+  removeDetail: (sectionId: string, entryId: string, index: number) => void;
   isDragging?: boolean;
 };
 
@@ -33,6 +34,7 @@ export function Entry({
   addDetail,
   updateDetail,
   removeEntry,
+  removeDetail,
   isDragging = false,
 }: EntryProps) {
   const {
@@ -102,7 +104,7 @@ export function Entry({
       </div>
       <ul className="list-disc pl-5">
         {entry.details.map((detail, index) => (
-          <li key={index}>
+          <li key={index} className="flex items-center">
             <Input
               value={detail}
               onChange={(e) =>
@@ -111,6 +113,14 @@ export function Entry({
               className="w-full border-none"
               placeholder="Detail"
             />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => removeDetail(sectionId, entry.id, index)}
+              className="ml-2"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
           </li>
         ))}
       </ul>
