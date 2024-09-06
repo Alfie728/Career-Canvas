@@ -1,13 +1,16 @@
 "use client";
 
 import React from "react";
-import { DndContext, DragOverlay } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+} from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { FileDown, PlusCircle } from "lucide-react";
-import { Button } from "@/ui/button";
+import { Button } from "@/components/ui/button";
 import { PersonalInfo } from "./PersonalInfo";
 import { Section } from "./Section";
 import { useResumeState } from "../hooks/useResumeState";

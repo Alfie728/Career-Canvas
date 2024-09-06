@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "@/ui/input";
+import { Input } from "@/components/ui/input";
 
 type PersonalInfoProps = {
   personalInfo: { name: string; contact: string };
