@@ -106,7 +106,7 @@ export function Entry({
           variant="ghost"
           size="sm"
           onClick={() => removeEntry(sectionId, entry.id)}
-          className="text-muted-foreground self-start mt-0.5"
+          className="text-muted-foreground ml-2"
         >
           <Trash2 className="h-4 w-4" />
         </Button>
@@ -126,7 +126,7 @@ export function Entry({
               variant="ghost"
               size="sm"
               onClick={() => removeDetail(sectionId, entry.id, index)}
-              className="text-muted-foreground ml-2"
+              className="text-muted-foreground mx-2"
             >
               <Trash2 className="h-4 w-4" />
             </Button>

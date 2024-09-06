@@ -83,7 +83,7 @@ export function Section({
           variant="ghost"
           size="sm"
           onClick={() => removeSection(section.id)}
-          className="text-muted-foreground"
+          className="text-muted-foreground ml-2"
         >
           <Trash2 className="h-4 w-4" />
         </Button>
