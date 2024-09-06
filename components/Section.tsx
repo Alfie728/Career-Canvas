@@ -1,7 +1,7 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, PlusCircle } from "lucide-react";
+import { GripVertical, PlusCircle, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Entry } from "./Entry";
 import { Section as SectionType } from "../constants/types";
@@ -9,6 +9,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { Input } from "@/components/ui/input";
 
 type SectionProps = {
   section: SectionType;
@@ -27,6 +28,8 @@ type SectionProps = {
     value: string
   ) => void;
   removeEntry: (sectionId: string, entryId: string) => void;
+  updateSectionTitle: (sectionId: string, title: string) => void;
+  removeSection: (sectionId: string) => void;
   isDragging?: boolean;
 };
 
@@ -37,6 +40,8 @@ export function Section({
   addDetail,
   updateDetail,
   removeEntry,
+  updateSectionTitle,
+  removeSection,
   isDragging = false,
 }: SectionProps) {
   const {
@@ -59,14 +64,26 @@ export function Section({
     <div
       ref={setNodeRef}
       style={style}
-      className="mb-6 border border-gray-200 p-4 rounded-lg bg-white"
+      className="mb-6 border border-gray-200 p-4 rounded-lg bg-white relative"
     >
       <div className="flex items-center mb-2" {...attributes} {...listeners}>
         <div className="mr-2 cursor-move">
           <GripVertical className="text-gray-400" />
         </div>
-        <h2 className="text-xl font-bold">{section.title}</h2>
+        <Input
+          value={section.title}
+          onChange={(e) => updateSectionTitle(section.id, e.target.value)}
+          className="text-xl font-bold border-none"
+        />
       </div>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => removeSection(section.id)}
+        className="absolute top-2 right-2"
+      >
+        <Trash2 className="h-4 w-4" />
+      </Button>
       <SortableContext
         items={section.entries.map((entry) => entry.id)}
         strategy={verticalListSortingStrategy}

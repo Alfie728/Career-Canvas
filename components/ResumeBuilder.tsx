@@ -26,6 +26,7 @@ import { Section } from "./Section";
 import { useResumeState } from "../hooks/useResumeState";
 import { useExport } from "../hooks/useExport";
 import { Entry } from "./Entry";
+import { PlusCircle } from "lucide-react";
 
 function DragMonitor({
   setActiveId,
@@ -58,12 +59,12 @@ export function ResumeBuilder() {
     addDetail,
     updateDetail,
     removeEntry,
+    addSection,
+    removeSection,
+    updateSectionTitle,
   } = useResumeState();
 
-  const { exportToMarkdown, exportToWord } = useExport(
-    personalInfo,
-    sections
-  );
+  const { exportToMarkdown, exportToWord } = useExport(personalInfo, sections);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -178,6 +179,8 @@ export function ResumeBuilder() {
                 addDetail={addDetail}
                 updateDetail={updateDetail}
                 removeEntry={removeEntry}
+                updateSectionTitle={updateSectionTitle}
+                removeSection={removeSection}
               />
             ))}
           </SortableContext>
@@ -190,6 +193,8 @@ export function ResumeBuilder() {
                 addDetail={addDetail}
                 updateDetail={updateDetail}
                 removeEntry={removeEntry}
+                updateSectionTitle={updateSectionTitle}
+                removeSection={removeSection}
                 isDragging
               />
             )}
@@ -210,6 +215,15 @@ export function ResumeBuilder() {
             )}
           </DragOverlay>
         </DndContext>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={addSection}
+          className="mt-4"
+        >
+          <PlusCircle className="h-4 w-4 mr-2" />
+          Add New Section
+        </Button>
       </div>
       <div className="flex justify-center space-x-4">
         <Button onClick={exportToMarkdown}>

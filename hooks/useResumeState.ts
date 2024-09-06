@@ -165,6 +165,27 @@ export function useResumeState() {
     );
   };
 
+  const addSection = () => {
+    const newSection: Section = {
+      id: `section-${Date.now()}`,
+      title: "New Section",
+      entries: [],
+    };
+    setSections([...sections, newSection]);
+  };
+
+  const removeSection = (sectionId: string) => {
+    setSections(sections.filter((section) => section.id !== sectionId));
+  };
+
+  const updateSectionTitle = (sectionId: string, title: string) => {
+    setSections(
+      sections.map((section) =>
+        section.id === sectionId ? { ...section, title } : section
+      )
+    );
+  };
+
   return {
     personalInfo,
     sections,
@@ -176,5 +197,8 @@ export function useResumeState() {
     addDetail,
     updateDetail,
     removeEntry,
+    addSection,
+    removeSection,
+    updateSectionTitle,
   };
 }
