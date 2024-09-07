@@ -1,7 +1,7 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, PlusCircle, Trash2 } from "lucide-react";
+import { GripVertical, PlusCircle, Trash2, Circle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -82,7 +82,7 @@ export function Entry({
             onChange={(e) =>
               updateEntry(sectionId, entry.id, "location", e.target.value)
             }
-            className="italic text-right border-none bg-transparent p-2"
+            className="font-bold text-right border-none bg-transparent p-2"
             placeholder="Additional Details (Organizations, places, etc.)"
           />
           <Input
@@ -90,7 +90,7 @@ export function Entry({
             onChange={(e) =>
               updateEntry(sectionId, entry.id, "subtitle", e.target.value)
             }
-            className="border-none bg-transparent p-2"
+            className="border-none bg-transparent p-2 italic"
             placeholder="Subtitle"
           />
           <Input
@@ -114,6 +114,7 @@ export function Entry({
       <ul className="list-disc pl-4 text-foreground space-y-1 pr-8">
         {entry.details.map((detail, index) => (
           <li key={index} className="flex items-center">
+            <Circle className="h-2 w-2 mx-2 flex-shrink-0 fill-current justify-center" />
             <Textarea
               value={detail}
               onChange={(e) =>
@@ -138,7 +139,7 @@ export function Entry({
           variant="outline"
           size="sm"
           onClick={() => addDetail(sectionId, entry.id)}
-          className="ml-5"
+          className="ml-10"
         >
           <PlusCircle className="h-4 w-4 mr-2" />
           Add Detail
