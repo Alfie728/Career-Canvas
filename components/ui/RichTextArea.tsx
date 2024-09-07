@@ -120,7 +120,7 @@ export const RichTextArea = forwardRef<RichTextAreaRef, RichTextAreaProps>(
         onInput={handleInput}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        className={`rich-text-area border rounded-md p-2 min-h-[60px] focus:outline-none focus:ring-2 focus:ring-blue-500 ${className} ${
+        className={`rich-text-area border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${className} ${
           !isFocused && (!value || value === placeholder) ? 'text-gray-400' : ''
         }`}
       >
