@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, PlusCircle, Trash2 } from "lucide-react";
@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { useDragAndDrop } from "../hooks/useDragAndDrop";
+import { RichTextAreaRef } from "@/components/ui/RichTextArea";
 
 type SectionProps = {
   section: SectionType;
@@ -34,6 +35,8 @@ type SectionProps = {
   removeSection: (sectionId: string) => void;
   isDragging?: boolean;
   removeDetail: (sectionId: string, entryId: string, index: number) => void;
+  richTextAreaRefs: React.MutableRefObject<(RichTextAreaRef | null)[]>;
+  sectionIndex: number;
 };
 
 export function Section({
@@ -47,6 +50,8 @@ export function Section({
   removeSection,
   isDragging = false,
   removeDetail,
+  richTextAreaRefs,
+  sectionIndex,
 }: SectionProps) {
   const {
     attributes,
@@ -74,6 +79,16 @@ export function Section({
     opacity: isDragging || isSortableDragging ? 0.5 : 1,
     zIndex: isDragging ? 1000 : 1,
   };
+
+  useEffect(() => {
+    const startIndex = sectionIndex * section.entries.reduce((acc, entry) => acc + entry.details.length, 0);
+    section.entries.forEach((entry, entryIndex) => {
+      entry.details.forEach((_, detailIndex) => {
+        const index = startIndex + entryIndex * entry.details.length + detailIndex;
+        richTextAreaRefs.current[index] = null;
+      });
+    });
+  }, [section.entries, richTextAreaRefs, sectionIndex]);
 
   return (
     <div
@@ -111,7 +126,7 @@ export function Section({
           items={section.entries.map((entry) => entry.id)}
           strategy={verticalListSortingStrategy}
         >
-          {section.entries.map((entry) => (
+          {section.entries.map((entry, entryIndex) => (
             <Entry
               key={entry.id}
               entry={entry}
@@ -121,6 +136,9 @@ export function Section({
               updateDetail={updateDetail}
               removeEntry={removeEntry}
               removeDetail={removeDetail}
+              richTextAreaRefs={richTextAreaRefs}
+              sectionIndex={sectionIndex}
+              entryIndex={entryIndex}
             />
           ))}
         </SortableContext>
@@ -135,6 +153,9 @@ export function Section({
               removeEntry={removeEntry}
               removeDetail={removeDetail}
               isDragging
+              richTextAreaRefs={richTextAreaRefs}
+              sectionIndex={sectionIndex}
+              entryIndex={section.entries.findIndex((e) => e.id === activeId)}
             />
           )}
         </DragOverlay>

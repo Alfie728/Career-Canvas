@@ -57,3 +57,6 @@
     @apply bg-background text-foreground;
   }
 }
+.logo-text {
+  font-family: "Satoshi", sans-serif;
+}
