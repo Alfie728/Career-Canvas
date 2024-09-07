@@ -9,6 +9,7 @@ import {
   TabStopType,
 } from "docx";
 import { Section } from "../constants/types";
+import { convertHtmlToMarkdown } from '../utils/htmlToMarkdown';
 
 export function useExport(
   personalInfo: { name: string; contact: string },
@@ -111,7 +112,7 @@ export function useExport(
           markdown += `${entry.subtitle} | ${entry.location} | ${entry.date}\n\n`;
         }
         entry.details.forEach((detail) => {
-          markdown += `- ${detail}\n`;
+          markdown += `- ${convertHtmlToMarkdown(detail)}\n`;
         });
         markdown += "\n";
       });

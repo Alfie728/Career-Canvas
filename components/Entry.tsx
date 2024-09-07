@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, PlusCircle, Trash2, Circle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { RichTextArea, RichTextAreaRef } from "@/components/ui/RichTextArea";
 import { Input } from "@/components/ui/input";
 import { Entry as EntryType } from "../constants/types";
 
@@ -26,6 +26,9 @@ type EntryProps = {
   removeEntry: (sectionId: string, entryId: string) => void;
   removeDetail: (sectionId: string, entryId: string, index: number) => void;
   isDragging?: boolean;
+  richTextAreaRefs: React.MutableRefObject<(RichTextAreaRef | null)[]>;
+  sectionIndex: number;
+  entryIndex: number;
 };
 
 export function Entry({
@@ -37,6 +40,9 @@ export function Entry({
   removeEntry,
   removeDetail,
   isDragging = false,
+  richTextAreaRefs,
+  sectionIndex,
+  entryIndex,
 }: EntryProps) {
   const {
     attributes,
@@ -54,6 +60,13 @@ export function Entry({
     zIndex: isDragging ? 1000 : 1,
   };
 
+  useEffect(() => {
+    const startIndex = sectionIndex * entry.details.length * entryIndex;
+    entry.details.forEach((_, detailIndex) => {
+      richTextAreaRefs.current[startIndex + detailIndex] = null;
+    });
+  }, [entry.details, richTextAreaRefs, sectionIndex, entryIndex]);
+
   return (
     <div
       ref={setNodeRef}
@@ -64,7 +77,7 @@ export function Entry({
         <div
           {...attributes}
           {...listeners}
-          className="pt-2.5 cursor-move self-start"
+          className="pt-2.5 cursor-move self-center mr-2"
         >
           <GripVertical className="text-muted-foreground h-4 w-4" />
         </div>
@@ -112,21 +125,27 @@ export function Entry({
         </Button>
       </div>
       <ul className="list-disc pl-4 text-foreground space-y-1 pr-8">
-        {entry.details.map((detail, index) => (
-          <li key={index} className="flex items-center">
-            <Circle className="h-2 w-2 mx-2 flex-shrink-0 fill-current justify-center" />
-            <Textarea
+        {entry.details.map((detail, detailIndex) => (
+          <li key={detailIndex} className="flex items-center">
+            <Circle className="h-2 w-2 mx-2 ml-4 flex-shrink-0 fill-current justify-center" />
+            <RichTextArea
+              ref={(el) => {
+                if (el) {
+                  const index = sectionIndex * entry.details.length * entryIndex + detailIndex;
+                  richTextAreaRefs.current[index] = el;
+                }
+              }}
               value={detail}
-              onChange={(e) =>
-                updateDetail(sectionId, entry.id, index, e.target.value)
+              onChange={(value) =>
+                updateDetail(sectionId, entry.id, detailIndex, value)
               }
-              className="flex-grow border-none bg-transparent p-2"
+              className="flex-grow border-none bg-transparent p-2 rich-text-area"
               placeholder="Detail"
             />
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => removeDetail(sectionId, entry.id, index)}
+              onClick={() => removeDetail(sectionId, entry.id, detailIndex)}
               className="text-muted-foreground mx-2"
             >
               <Trash2 className="h-4 w-4" />

@@ -142,8 +142,8 @@ export function useResumeState() {
 
     if (active.id !== over?.id) {
       setSections((sections) => {
-        const oldIndex = sections.findIndex((s) => s.id === active.id);
-        const newIndex = sections.findIndex((s) => s.id === over?.id);
+        const oldIndex = sections.findIndex((section) => section.id === active.id);
+        const newIndex = sections.findIndex((section) => section.id === over?.id);
 
         return arrayMove(sections, oldIndex, newIndex);
       });
@@ -303,7 +303,7 @@ export function useResumeState() {
   return {
     personalInfo,
     sections,
-    setSections, // Add this line
+    setSections,
     updatePersonalInfo,
     onDragEnd,
     addEntry,
